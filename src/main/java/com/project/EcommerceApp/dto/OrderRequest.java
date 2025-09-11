@@ -1,17 +1,21 @@
 package com.project.EcommerceApp.dto;
 
 import jakarta.validation.constraints.*;
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class OrderRequest {
   @NotEmpty
-  public List<Item> items;
+  private List<Item> items;
 
+  @Data
   public static class Item {
     @NotNull
-    public Long productId;
+    private Long productId;
 
     @Min(1)
-    public int quantity;
+    private int quantity;
   }
 }
