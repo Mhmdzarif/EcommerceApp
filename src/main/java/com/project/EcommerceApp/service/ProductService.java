@@ -3,32 +3,29 @@ package com.project.EcommerceApp.service;
 import com.project.EcommerceApp.dto.ProductRequest;
 import com.project.EcommerceApp.entity.Product;
 import com.project.EcommerceApp.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
-  private final ProductRepository repo;
 
-  public ProductService(ProductRepository repo) {
-    this.repo = repo;
-  }
+  private final ProductRepository productRepository;
 
-  public List<Product> getAll() {
-    return repo.findAll();
-  }
-
-  public Product add(ProductRequest req) {
+  public Product createProduct(ProductRequest req) {
     Product p = new Product();
-    p.setName(req.name);
-    p.setDescription(req.description);
-    p.setPrice(req.price);
-    p.setStock(req.stock);
-    p.setThumbnail(req.thumbnail);
-    return repo.save(p);
+    // always use getters on the DTO
+    p.setName(req.getName());
+    p.setDescription(req.getDescription());
+    p.setPrice(req.getPrice());
+    p.setStock(req.getStock());
+    p.setThumbnail(req.getThumbnail());
+    return productRepository.save(p);
   }
 
-  public List<Product> lowStock(int threshold) {
-    return repo.findByStockLessThan(threshold);
+  public List<Product> listAll() {
+    return productRepository.findAll();
   }
 }
