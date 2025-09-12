@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Map;
 
 @Service
@@ -18,7 +19,7 @@ public class AuthService {
   private final JwtUtil jwtUtil;
 
   @Transactional
-  public AuthResponse register(AuthRequest req) {
+  public AuthResponse register(RegisterRequest req) {
     User u = new User();
     u.setEmail(req.getEmail());
     u.setPassword(passwordEncoder.encode(req.getPassword()));
@@ -32,7 +33,7 @@ public class AuthService {
     return new AuthResponse(token, saved.getEmail(), saved.getRole());
   }
 
-  public AuthResponse login(AuthRequest req) {
+  public AuthResponse login(LoginRequest req) {
     User u = userRepository.findByEmail(req.getEmail())
       .orElseThrow(() -> new RuntimeException("Invalid credentials"));
     if (!passwordEncoder.matches(req.getPassword(), u.getPassword())) {
