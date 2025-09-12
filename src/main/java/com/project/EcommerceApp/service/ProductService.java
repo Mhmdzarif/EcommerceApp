@@ -7,16 +7,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-
   private final ProductRepository productRepository;
 
-  public Product createProduct(ProductRequest req) {
+  // used by ProductController.getAll()
+  public List<Product> getAll() {
+    return productRepository.findAll();
+  }
+
+  // used by ProductController.add()
+  public Product add(ProductRequest req) {
     Product p = new Product();
-    // always use getters on the DTO
     p.setName(req.getName());
     p.setDescription(req.getDescription());
     p.setPrice(req.getPrice());
@@ -25,7 +30,10 @@ public class ProductService {
     return productRepository.save(p);
   }
 
-  public List<Product> listAll() {
-    return productRepository.findAll();
+  // used by AdminController.lowStock()
+  public List<Product> lowStock(int threshold) {
+    return productRepository.findAll().stream()
+      .filter(p -> p.getStock() < threshold)
+      .collect(Collectors.toList());
   }
 }
