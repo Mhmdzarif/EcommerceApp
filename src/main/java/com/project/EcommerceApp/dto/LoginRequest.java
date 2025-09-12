@@ -1,11 +1,15 @@
 package com.project.EcommerceApp.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
+@Data
 public class LoginRequest {
-  @Email @NotBlank
-  public String email;
+  @Email
+  @NotBlank
+  private String email;
 
   @NotBlank
-  public String password;
+  private String password;
 }
