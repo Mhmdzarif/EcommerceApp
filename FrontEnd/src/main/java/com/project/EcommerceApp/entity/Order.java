@@ -3,24 +3,26 @@ package com.project.EcommerceApp.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
 
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
-@Entity @Table(name = "orders")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "orders")
 public class Order {
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(optional = false, fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "user_id")
   private User user;
 
-  @Column(nullable = false)
   private LocalDateTime createdAt;
 
-  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<OrderItem> items = new ArrayList<>();
+  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+  private List<OrderItem> items;
 
-  @Column(nullable = false)
-  private double total; // cached total for quick reads
+  private double total;
 }

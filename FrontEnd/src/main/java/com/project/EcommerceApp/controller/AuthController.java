@@ -3,28 +3,22 @@ package com.project.EcommerceApp.controller;
 import com.project.EcommerceApp.dto.*;
 import com.project.EcommerceApp.service.AuthService;
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
-
   private final AuthService authService;
 
-  public AuthController(AuthService authService) {
-    this.authService = authService;
-  }
-
   @PostMapping("/register")
-  public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
-    var res = authService.register(req);
-    return ResponseEntity.status(201).body(res);
+  public AuthResponse register(@Valid @RequestBody RegisterRequest req) {
+    return authService.register(req);
   }
 
   @PostMapping("/login")
-  public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest req) {
-    var res = authService.login(req);
-    return ResponseEntity.ok(res);
+  public AuthResponse login(@Valid @RequestBody LoginRequest req) {
+    return authService.login(req);
   }
 }

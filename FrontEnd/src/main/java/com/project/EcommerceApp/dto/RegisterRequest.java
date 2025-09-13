@@ -1,11 +1,15 @@
 package com.project.EcommerceApp.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
+@Data
 public class RegisterRequest {
-  @Email @NotBlank
-  public String email;
+  @Email
+  @NotBlank
+  private String email;
 
-  @NotBlank @Size(min = 6, max = 100)
-  public String password;
+  @NotBlank
+  private String password;
 }

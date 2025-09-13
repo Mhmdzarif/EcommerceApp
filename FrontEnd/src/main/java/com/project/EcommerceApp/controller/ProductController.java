@@ -4,30 +4,24 @@ import com.project.EcommerceApp.dto.ProductRequest;
 import com.project.EcommerceApp.entity.Product;
 import com.project.EcommerceApp.service.ProductService;
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api/products")
+@RequiredArgsConstructor
 public class ProductController {
-
   private final ProductService productService;
 
-  public ProductController(ProductService productService) {
-    this.productService = productService;
-  }
-
   @GetMapping
-  public List<Product> all() {
+  public List<Product> getAll() {
     return productService.getAll();
   }
 
   @PostMapping
-  @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<Product> add(@Valid @RequestBody ProductRequest req) {
-    Product saved = productService.add(req);
-    return ResponseEntity.status(201).body(saved);
+  public Product add(@Valid @RequestBody ProductRequest req) {
+    return productService.add(req);
   }
 }

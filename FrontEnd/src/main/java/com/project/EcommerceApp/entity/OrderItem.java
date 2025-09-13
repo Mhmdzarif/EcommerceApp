@@ -3,22 +3,24 @@ package com.project.EcommerceApp.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Table(name = "order_items")
 public class OrderItem {
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(optional = false, fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "order_id")
   private Order order;
 
-  @ManyToOne(optional = false, fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_id")
   private Product product;
 
-  @Column(nullable = false)
   private int quantity;
-
-  @Column(nullable = false)
-  private double unitPrice; // snapshot of price at purchase time
+  private double price;
 }

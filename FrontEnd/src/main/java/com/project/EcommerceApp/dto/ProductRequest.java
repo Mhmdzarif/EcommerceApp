@@ -1,18 +1,20 @@
 package com.project.EcommerceApp.dto;
 
 import jakarta.validation.constraints.*;
+import lombok.Data;
 
+@Data
 public class ProductRequest {
   @NotBlank
-  public String name;
+  private String name;
 
-  public String description;
+  private String description;
 
   @Positive
-  public double price;
+  private double price;
 
   @Min(0)
-  public int stock;
+  private int stock;
 
-  public String thumbnail; // optional
+  private String thumbnail;
 }
