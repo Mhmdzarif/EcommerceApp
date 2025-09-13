@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../widgets/error_snackbar.dart';
 import 'auth_providers.dart';
 
+
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
   @override

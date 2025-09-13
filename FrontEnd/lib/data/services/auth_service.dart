@@ -15,7 +15,14 @@ class AuthService {
 
   Future<LoginResponse> login(LoginRequest req) async {
     try {
-      final r = await _dio.post('/auth/login', data: {'email': req.email, 'password': req.password});
+      final r = await _dio.post(
+        '/auth/login',
+        data: {'email': req.email, 'password': req.password},
+        options: Options(
+          sendTimeout: Duration(seconds: 20),  
+          receiveTimeout: Duration(seconds: 20),
+        ),
+      );
       return LoginResponse.fromJson(r.data);
     } on DioException catch (e) { apiThrow(e); }
   }
