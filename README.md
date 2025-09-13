@@ -32,3 +32,9 @@ Login (admin): POST http://localhost:5264/auth/login
 Get products: GET http://localhost:5264/products
 Create product (admin): POST http://localhost:5264/products
 Create order (user): POST http://localhost:5264/orders
+
+--How to run--
+Open the EcommerceBackend/Ecommerce.api directory and type "dotnet run" in a terminal.
+In a new window open FrontEnd/ directory and type "Flutter run" then press 1.
+Now the app should be working.
+NOTE: if your computer is set to use another port you should fix it so it uses port 5264 as the api calls in this project are set to listen to this port.
