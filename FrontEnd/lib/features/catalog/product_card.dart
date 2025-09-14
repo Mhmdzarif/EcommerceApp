@@ -32,6 +32,16 @@ class ProductCard extends StatelessWidget {
                       child: const Text('Out of stock', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                     ),
                   ),
+                if (product.lowStock)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(color: Colors.orange.withOpacity(0.9), borderRadius: BorderRadius.circular(8)),
+                      child: const Text('Low Stock', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
               ]),
             ),
             Padding(

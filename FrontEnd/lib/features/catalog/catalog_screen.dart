@@ -1,6 +1,8 @@
+import '../auth/auth_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../data/repositories/auth_repository.dart';
 import '../../../widgets/empty_state.dart';
 import '../../../widgets/shimmer_box.dart';
 import 'catalog_providers.dart';
@@ -13,15 +15,35 @@ class CatalogScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final productsAsync = ref.watch(productsProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Catalog'),
-        actions: [
-          IconButton(icon: const Icon(Icons.shopping_cart_outlined), onPressed: () => context.go('/cart')),
-          IconButton(icon: const Icon(Icons.receipt_long), onPressed: () => context.go('/orders')),
-          IconButton(icon: const Icon(Icons.admin_panel_settings), onPressed: () => context.go('/admin')),
-        ],
-      ),
+    final authRepo = ref.read(authRepositoryProvider);
+    return FutureBuilder<String?>(
+      future: authRepo.getRole(),
+      builder: (context, snapshot) {
+        final isAdmin = snapshot.data == 'ADMIN';
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Catalog'),
+            leading: Navigator.of(context).canPop()
+                ? IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => context.pop(),
+                  )
+                : null,
+            actions: [
+              IconButton(icon: const Icon(Icons.shopping_cart_outlined), onPressed: () => context.go('/cart')),
+              IconButton(icon: const Icon(Icons.receipt_long), onPressed: () => context.go('/orders')),
+              if (isAdmin)
+                IconButton(icon: const Icon(Icons.admin_panel_settings), onPressed: () => context.go('/admin')),
+              IconButton(
+                icon: const Icon(Icons.logout),
+                tooltip: 'Logout',
+                onPressed: () async {
+                  await ref.read(authActionsProvider).logout();
+                  if (context.mounted) context.go('/login');
+                },
+              ),
+            ],
+          ),
       body: RefreshIndicator(
         onRefresh: () async => ref.refresh(productsProvider.future),
         child: productsAsync.when(
@@ -55,6 +77,8 @@ class CatalogScreen extends ConsumerWidget {
           error: (e, _) => ListView(children: [Padding(padding: const EdgeInsets.all(16), child: Text('Error: $e'))]),
         ),
       ),
-    );
+          );
+        },
+      );
   }
 }

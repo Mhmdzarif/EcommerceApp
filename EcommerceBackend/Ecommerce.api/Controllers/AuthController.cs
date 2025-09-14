@@ -29,7 +29,7 @@ public class AuthController : ControllerBase
         {
             Email = req.Email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(req.Password),
-            Role = "USER"
+            Role = string.IsNullOrWhiteSpace(req.Role) ? "USER" : req.Role.ToUpper()
         };
 
         user = await _users.AddAsync(user);

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/formatters.dart';
 import '../../widgets/empty_state.dart';
 import 'admin_providers.dart';
+import '../catalog/product_card.dart';
 
 class LowStockTab extends ConsumerWidget {
   const LowStockTab({super.key});
@@ -15,15 +16,20 @@ class LowStockTab extends ConsumerWidget {
       child: lowAsync.when(
         data: (items) {
           if (items.isEmpty) return const EmptyState(title: 'No low-stock items', subtitle: 'All good for now.');
-          return ListView.separated(
+          return GridView.builder(
+            padding: const EdgeInsets.all(8),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.75,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+            ),
             itemCount: items.length,
-            separatorBuilder: (_, __) => const Divider(),
             itemBuilder: (_, i) {
               final p = items[i];
-              return ListTile(
-                title: Text(p.name),
-                subtitle: Text('Stock: ${p.stock}'),
-                trailing: Text(formatCents(p.priceCents)),
+              return ProductCard(
+                product: p,
+                onTap: () {},
               );
             },
           );

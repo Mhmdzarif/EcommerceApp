@@ -6,7 +6,7 @@ final authStatusProvider = FutureProvider<bool>((ref) => ref.read(authRepository
 final authActionsProvider = Provider((ref) {
   final repo = ref.read(authRepositoryProvider);
   return (
-    register: (String email, String password) => repo.register(email, password),
+    register: (String email, String password, String role) => repo.register(email, password, role),
     login: (String email, String password) => repo.login(email, password),
     logout: () => repo.logout(),
   );

@@ -4,26 +4,23 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'app_router.dart';
 import 'theme.dart';
 
+
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  runApp(const ProviderScope(child: App()));
-  
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class App extends ConsumerWidget {
-  const App({super.key});
+class MyApp extends ConsumerWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
     return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      title: 'Shop',
+      routerConfig: router,
+      title: 'Ecommerce App',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
-      routerConfig: router,
     );
   }
 }

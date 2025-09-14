@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'data/repositories/auth_repository.dart';
@@ -19,9 +19,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     refreshListenable: GoRouterRefreshStream(ref.watch(authStateChangesProvider)),
     redirect: (ctx, state) async {
       final isLogged = await authRepo.isLoggedIn();
+      final role = isLogged ? (await authRepo.getRole()) : null;
       final loggingIn = state.matchedLocation == '/login' || state.matchedLocation == '/register';
       if (!isLogged && !loggingIn) return '/login';
-      if (isLogged && loggingIn) return '/catalog';
+      if (isLogged && loggingIn) {
+        if (role == 'ADMIN') return '/admin';
+        return '/catalog';
+      }
+      // Prevent users from accessing admin screens and vice versa
+      if (isLogged && role == 'USER' && state.matchedLocation.startsWith('/admin')) {
+        return '/catalog';
+      }
+      if (isLogged && role == 'ADMIN' && (
+        state.matchedLocation.startsWith('/catalog') ||
+        state.matchedLocation.startsWith('/cart') ||
+        state.matchedLocation.startsWith('/orders') ||
+        state.matchedLocation.startsWith('/product')
+      )) {
+        return '/admin';
+      }
       return null;
     },
     routes: [

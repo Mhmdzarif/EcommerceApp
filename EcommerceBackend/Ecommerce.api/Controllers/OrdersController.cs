@@ -44,8 +44,9 @@ public class OrdersController : ControllerBase
     [HttpGet("orders/me")]
     public async Task<ActionResult<List<OrderSummaryResponse>>> MyOrders()
     {
-        var orders = await _orders.GetMyOrdersAsync(CurrentUserId());
-        return Ok(orders.Select(o => new OrderSummaryResponse(o.Id, o.CreatedAt, o.Total)));
+    var orders = await _orders.GetMyOrdersAsync(CurrentUserId());
+    var summaries = orders.Select(o => new OrderSummaryResponse(o.Id, o.CreatedAt, o.Total)).ToList();
+    return Ok(summaries);
     }
 
     [Authorize(Policy = "AdminOnly")]

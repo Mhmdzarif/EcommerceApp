@@ -1,3 +1,4 @@
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,7 @@ class RegisterScreen extends ConsumerStatefulWidget {
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
+  String _role = 'USER';
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _password = TextEditingController();
@@ -19,7 +21,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
+      appBar: AppBar(
+        title: const Text('Register'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
+        ),
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420),
@@ -40,13 +48,23 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   decoration: const InputDecoration(labelText: 'Password'),
                   validator: (v) => v != null && v.length >= 6 ? null : 'Min 6 characters',
                 ),
+                const SizedBox(height: 12),
+                DropdownButtonFormField<String>(
+                  value: _role,
+                  decoration: const InputDecoration(labelText: 'Register as'),
+                  items: const [
+                    DropdownMenuItem(value: 'USER', child: Text('User')),
+                    DropdownMenuItem(value: 'ADMIN', child: Text('Admin')),
+                  ],
+                  onChanged: (v) => setState(() => _role = v ?? 'USER'),
+                ),
                 const SizedBox(height: 16),
                 FilledButton(
                   onPressed: _loading ? null : () async {
                     if (!_formKey.currentState!.validate()) return;
                     setState(() => _loading = true);
                     try {
-                      await ref.read(authActionsProvider).register(_email.text.trim(), _password.text);
+                      await ref.read(authActionsProvider).register(_email.text.trim(), _password.text, _role);
                       if (mounted) context.go('/login');
                     } catch (e) {
                       if (mounted) showErrorSnackBar(context, e.toString());

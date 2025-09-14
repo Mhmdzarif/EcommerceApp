@@ -25,6 +25,8 @@ class Order {
     id: j['id'].toString(),
     createdAt: DateTime.parse(j['createdAt']),
     totalCents: (j['total'] as num).toInt(),
-    items: (j['items'] as List).map((e) => OrderItem.fromJson(e)).toList(),
+    items: (j['items'] is List)
+        ? (j['items'] as List).map((e) => OrderItem.fromJson(e)).toList()
+        : <OrderItem>[],
   );
 }

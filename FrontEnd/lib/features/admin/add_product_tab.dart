@@ -14,7 +14,7 @@ class AddProductTab extends ConsumerStatefulWidget {
 class _AddProductTabState extends ConsumerState<AddProductTab> {
   final _formKey = GlobalKey<FormState>();
   final _name = TextEditingController();
-  final _price = TextEditingController(); // in currency units, will convert to cents
+  final _price = TextEditingController();
   final _stock = TextEditingController();
 
   bool _loading = false;
@@ -62,8 +62,9 @@ class _AddProductTabState extends ConsumerState<AddProductTab> {
                 try {
                   final priceCents = (double.parse(_price.text) * 100).round();
                   final stock = int.parse(_stock.text);
-                  await ref.read(addProductProvider((name: _name.text.trim(), priceCents: priceCents, stock: stock)).future);
+                  await ref.read(addProductProvider((name: _name.text.trim(), priceCents: priceCents, stock: stock, description: null, thumbnail: null)).future);
                   ref.invalidate(productsProvider);
+                  ref.invalidate(adminLowStockProvider);
                   if (mounted) {
                     showErrorSnackBar(context, 'Product added');
                     _name.clear(); _price.clear(); _stock.clear();
